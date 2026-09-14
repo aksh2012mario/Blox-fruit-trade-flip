@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "trades": {
+      ".read": "auth != null",
+      ".indexOn": ["createdAt"],
+      "$tradeId": {
+        ".write": "auth != null && ((!data.exists() && newData.child('ownerUid').val() == auth.uid) || (data.exists() && data.child('ownerUid').val() == auth.uid))",
+        ".validate": "newData.hasChildren(['user','give','want','createdAt','ownerUid']) && newData.child('user').isString() && newData.child('give').isString() && newData.child('want').isString() && newData.child('createdAt').isNumber() && newData.child('ownerUid').val() == auth.uid",
+        "chat": {
+          "$messageId": {
+            ".write": "auth != null",
+            ".validate": "newData.hasChildren(['user','text','createdAt']) && newData.child('user').isString() && newData.child('text').isString() && newData.child('createdAt').isNumber()"
+          }
+        }
+      }
+    }
+  }
+}
